@@ -12,4 +12,4 @@
 2. 確定你的伺服器設定檔(`server.properties`)的`enable-query`為`true`
 
 # 預覽
-![預覽圖](http://i.imgur.com/4Wo83Dih.png)
+![預覽圖](http://i.imgur.com/4Wo83Di.png)
