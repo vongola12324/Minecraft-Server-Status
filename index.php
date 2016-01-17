@@ -23,15 +23,15 @@
     <h1>Minecraft Server Status</h1>
     <?php
     $settings = parse_ini_file("settings.ini");
-    print_r($settings);
-    print('<hr>');
+//    print_r($settings);
+//    print('<hr>');
     ?>
-    <?php foreach ($settings['servers'] as $serverIP): ?>
+    <?php foreach ($settings['servers'] as $index => $serverIP): ?>
         <?php $outputs = [];
         exec('python getMinecraftStatus.py ' . $serverIP, $outputs, $return_var);
 
         $info = json_decode($outputs[0], true);
-        print_r($info);
+//        print_r($info);
         ?>
         <?php if (isset($info['error']) || $return_var != 0): ?>
             <div class="panel panel-default">
@@ -60,15 +60,61 @@
                         <dd><?php echo $info['version']['name'] ?></dd>
                         <dt>Player</dt>
                         <dd>
-                            <?php echo $info['players']['online'] ?>&nbsp;/&nbsp;<?php echo $info['players']['max'] ?><br/>
-
+                            <?php echo $info['players']['online'] ?>&nbsp;/&nbsp;<?php echo $info['players']['max'] ?>
+                            <br/>
+                            <div class="panel-group" id="accordionPlayerList<?php echo $index ?>" role="tablist" aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingPlayerList<?php echo $index ?>">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordionPlayerList<?php echo $index ?>" href="#collapsePlayerList<?php echo $index ?>" aria-expanded="true" aria-controls="collapsePlayerList<?php echo $index ?>">
+                                                玩家清單
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapsePlayerList<?php echo $index ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPlayerList<?php echo $index ?>">
+                                        <div class="panel-body">
+                                            <table class="table">
+                                                <tbody>
+                                                <?php foreach ($info['players']['sample'] as $player): ?>
+                                                    <tr>
+                                                        <td><?php echo $player['name'] ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </dd>
-<!--                        <dt>Mod List</dt>-->
-<!--                        <dd>-->
-<!--                            --><?php //foreach ($info['modinfo']['modList'] as $mod): ?>
-<!--                                --><?php //echo $mod['modid'] ?><!--<br/>-->
-<!--                            --><?php //endforeach; ?>
-<!--                        </dd>-->
+                        <dt>Mod List</dt>
+                        <dd>
+                            <div class="panel-group" id="accordionModList<?php echo $index ?>" role="tablist" aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingModList<?php echo $index ?>">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordionModList<?php echo $index ?>" href="#collapseModList<?php echo $index ?>" aria-expanded="true" aria-controls="collapseModList<?php echo $index ?>">
+                                                Mod List
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseModList<?php echo $index ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingModList<?php echo $index ?>">
+                                        <div class="panel-body">
+                                            <table class="table">
+                                                <tbody>
+                                                <?php foreach ($info['modinfo']['modList'] as $mod): ?>
+                                                    <tr>
+                                                        <td><?php echo $mod['modid'] ?></td>
+                                                        <td><?php echo $mod['version'] ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </dd>
                     </dl>
                 </div>
             </div>
